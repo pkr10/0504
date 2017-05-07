@@ -43,12 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        e1 = (EditText)findViewById(R.id.editText);
-        w1 = (WebView)findViewById(R.id.webview);
-        w1.addJavascriptInterface(new siteAdd(),"MyApp");
-        w1.addJavascriptInterface(new back(),"BACK");
-        l1 = (LinearLayout)findViewById(R.id.linear);
-        l2 = (LinearLayout)findViewById(R.id.linear2);
+        init();
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data);
         listview = (ListView)findViewById(R.id.list);
         listview.setAdapter(adapter);
@@ -61,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 w1.loadUrl("http://"+data1.get(position).toString());
             }
         });
-        Log.d("데이터",data1.toString());
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -78,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        Log.d("data123",data1.toString());
-
-
         final ProgressDialog dialog;
         dialog = new ProgressDialog(this);
         w1.setWebViewClient(new WebViewClient(){
@@ -145,6 +136,15 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
     }
+    void init(){
+        e1 = (EditText)findViewById(R.id.editText);
+        w1 = (WebView)findViewById(R.id.webview);
+        w1.addJavascriptInterface(new siteAdd(),"MyApp");
+        w1.addJavascriptInterface(new back(),"BACK");
+        l1 = (LinearLayout)findViewById(R.id.linear);
+        l2 = (LinearLayout)findViewById(R.id.linear2);
+    }
+
 
 
     @Override
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==1){
             l1.setAnimation(a1);
-            l1.setVisibility(View.INVISIBLE);
+            l1.setVisibility(View.GONE);
 
             a1.start();
             listview.setVisibility(View.VISIBLE);
@@ -178,13 +178,20 @@ public class MainActivity extends AppCompatActivity {
     class siteAdd {
         @JavascriptInterface
         public void getdata(String value, String value1) {
-            data data2 = new data(value, value1);
+            final data data2 = new data(value, value1);
 
-            if (!data1.contains(data2.url)) {
-                data.add("<" + data2.name + ">" + data2.url);
-                data1.add(data2.url);
-                Toast.makeText(getApplicationContext(), "추가되었습니다", Toast.LENGTH_LONG).show();
-                adapter.notifyDataSetChanged();
+            if (!data1.contains(data2.geturl())) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        data.add("<" + data2.getname() + ">" + data2.geturl());
+                        data1.add(data2.geturl());
+                        adapter.notifyDataSetChanged();
+                        w1.loadUrl("javascript:displayMsg2()");
+                    }
+                });
+
+
             } else {
                 handler.post(new Runnable() {
                     @Override

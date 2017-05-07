@@ -23,6 +23,12 @@
 		document.getElementById('url').value='';
 		document.getElementById('url').focus();
 	}
+	function displayMsg2(){
+		var str = "등록되었습니다";
+		document.getElementById('msg').innerText = str;
+		document.getElementById('url').value='';
+		document.getElementById('url').focus();
+	}
 
 	function setMsg(msg){
 		document.getElementById('msg').innerText = msg;
@@ -51,7 +57,6 @@
         if(!url.value =='' &&!sitename.value ==''){
 
 		    MyApp.getdata(sitename.value,url.value);
-		    <!--displayMsg();-->
 		    return;
 		}
 
