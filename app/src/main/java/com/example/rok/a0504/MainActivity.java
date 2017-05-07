@@ -44,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        e1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                e1.setText("");
+            }
+        });
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data);
         listview = (ListView)findViewById(R.id.list);
         listview.setAdapter(adapter);
