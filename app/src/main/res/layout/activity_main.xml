@@ -43,8 +43,8 @@
             <Button
             android:onClick="onmyclick"
             android:text="go"
-            android:layout_width="71dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/button"/>
         </LinearLayout>
 

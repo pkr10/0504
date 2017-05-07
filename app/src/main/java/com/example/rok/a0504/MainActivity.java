@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         e1 = (EditText)findViewById(R.id.editText);
         w1 = (WebView)findViewById(R.id.webview);
         w1.addJavascriptInterface(new siteAdd(),"MyApp");
+        w1.addJavascriptInterface(new back(),"BACK");
         l1 = (LinearLayout)findViewById(R.id.linear);
         l2 = (LinearLayout)findViewById(R.id.linear2);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data);
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        Log.d("data123",data1.toString());
+
+
         final ProgressDialog dialog;
         dialog = new ProgressDialog(this);
         w1.setWebViewClient(new WebViewClient(){
@@ -160,56 +164,53 @@ public class MainActivity extends AppCompatActivity {
             listview.setVisibility(View.VISIBLE);
         }
         if(item.getItemId()==2){
+            l1.setVisibility(View.VISIBLE);
+            listview.setVisibility(View.INVISIBLE);
             w1.loadUrl("file:///android_asset/www/urladd.html");
             l2.setAnimation(a1);
             a1.start();
     }
         return super.onOptionsItemSelected(item);
     }
+
+
     Handler handler = new Handler();
-
-//    class Javascriptmethod{
-//        @JavascriptInterface//이렇게 해준 애만 웹페이지에 호출가능
-//        public void displayToast(){
-//            Toast.makeText(getApplicationContext(),"추가되었습니다",Toast.LENGTH_SHORT).show();
-//            handler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    AlertDialog.Builder builder =  new AlertDialog.Builder(MainActivity.this);
-//                    builder.setTitle("그림변경").setMessage("그림을 변경하시겠습니까").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            w1.loadUrl("javascript:changeImage()");
-//                        }
-//                    }).setNegativeButton("cancel",null).show();
-//                }
-//            });
-
-
-//        }
-//        public void getdata(String value){
-//            data.add(value);
-//            adapter.notifyDataSetChanged();
-//        }
-
-//    }
     class siteAdd {
         @JavascriptInterface
-        public void getdata(String value,String value1) {
-            data data2 = new data(value,value1);
-            data.add(data2.name);
-            data1.add(data2.url);
-            adapter.notifyDataSetChanged();
+        public void getdata(String value, String value1) {
+            data data2 = new data(value, value1);
+
+            if (!data1.contains(data2.url)) {
+                data.add("<" + data2.name + ">" + data2.url);
+                data1.add(data2.url);
+                Toast.makeText(getApplicationContext(), "추가되었습니다", Toast.LENGTH_LONG).show();
+                adapter.notifyDataSetChanged();
+            } else {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        w1.loadUrl("javascript:displayMsg()");
+
+
+                    }
+                });
+            }
+
+
         }
-    @JavascriptInterface
-    public void back(){
-        l2.setVisibility(View.VISIBLE);
+    }
+    class back{
+        @JavascriptInterface
+        public void back(){
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    l2.setVisibility(View.VISIBLE);
+                }
+            });
+        }
     }
 
-
-
-
-    }
 
 
     public void onmyclick(View view) {

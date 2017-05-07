@@ -28,7 +28,7 @@
 		document.getElementById('msg').innerText = msg;
 	}
 	function back(){
-	   MyApp.back();
+	   BACK.back();
 	}
 
 	function siteAdd(){
@@ -47,9 +47,14 @@
 			url.focus();
 			return;
 		}
-		MyApp.getdata(sitename.value,url.value);
 
-		setMsg('추가되었습니다');
+        if(!url.value =='' &&!sitename.value ==''){
+
+		    MyApp.getdata(sitename.value,url.value);
+		    <!--displayMsg();-->
+		    return;
+		}
+
 
 		//여기에 앱 메소드 호출
 
